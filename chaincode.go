@@ -21,6 +21,7 @@ package main
 
 import (
     "errors"
+    "strings"
     "encoding/json"
     "fmt"
     "strconv"
@@ -213,7 +214,7 @@ func (t *SimpleChaincode) createDonation(stub *shim.ChaincodeStub, args []string
     }
     reques := allR.AllRequests
     for _,v := range reques {
-        if v.Id == request.Id {
+        if (strings.EqualFold(v.Id, request.Id)) {
             v.CurrentMoney += money
             dl2 := v.DonationList
             if dl2 == nil {
@@ -225,7 +226,7 @@ func (t *SimpleChaincode) createDonation(stub *shim.ChaincodeStub, args []string
         }
     }
     allR.AllRequests = reques
-    requesJson,err := json.Marshal(allRis)
+    requesJson,err := json.Marshal(&allR)
     stub.PutState("allRequests", requesJson)
     return nil, nil     
 }
